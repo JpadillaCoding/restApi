@@ -1,8 +1,7 @@
 import { Router } from "express";
+import { getStudents } from "./controller.js"
 
 const router = Router();
 
-router.get("/", (req, res) => {
-  res.send("using api route");
-});
+router.get("/", getStudents);
 export default router;
