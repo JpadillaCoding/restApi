@@ -4,6 +4,8 @@ import {
   getStudentByIdQuery,
   checkEmailExists,
   addStudentQuery,
+  deleteStudentByIdQuery,
+  checkIdExists,
 } from "./queries.js";
 
 const getStudents = (req, res) => {
@@ -34,4 +36,16 @@ const addStudent = (req, res) => {
   });
 };
 
-export { getStudents, getStudentsByID, addStudent };
+const deleteStudentById = (req, res) => {
+  const id = parseInt(req.params.id);
+  pool.query(checkIdExists, [id], (error, results) => {
+    if (!results.rows.length) {
+      res.send("user does not exists.");
+    }
+    pool.query(deleteStudentByIdQuery, [id], (error, results) => {
+      if (error) throw error;
+      res.status(201).send("student deleted.");
+    });
+  });
+};
+export { getStudents, getStudentsByID, addStudent, deleteStudentById };
