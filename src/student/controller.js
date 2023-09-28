@@ -6,6 +6,7 @@ import {
   addStudentQuery,
   deleteStudentByIdQuery,
   checkIdExists,
+  updateStudentByIDQuery,
 } from "./queries.js";
 
 const getStudents = (req, res) => {
@@ -44,8 +45,30 @@ const deleteStudentById = (req, res) => {
     }
     pool.query(deleteStudentByIdQuery, [id], (error, results) => {
       if (error) throw error;
-      res.status(201).send("student deleted.");
+      res.status(200).send("student deleted.");
     });
   });
 };
-export { getStudents, getStudentsByID, addStudent, deleteStudentById };
+
+const updateStudentByID = (req, res) => {
+  const id = parseInt(req.params.id);
+  const { age } = req.body;
+  pool.query(getStudentByIdQuery, [id], (error, results) => {
+    if (error) throw error
+    const noStudentFound = !results.rows.length;
+    if (noStudentFound) {
+      res.send("Student does not exists");
+    }
+    pool.query(updateStudentByIDQuery, [age, id], (error, results) => {
+      if (error) throw error;
+      res.status(200).send("student updated");
+    });
+  });
+};
+export {
+  getStudents,
+  getStudentsByID,
+  addStudent,
+  deleteStudentById,
+  updateStudentByID,
+};
